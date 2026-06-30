@@ -29,22 +29,19 @@ private function safeGet(
         ->retry(2, 500)
         ->get($url);
 
-        dd([
+        // Log only (safe for production)
+        logger()->info('KAA_HTTP_RESPONSE', [
             'url' => $url,
             'status' => $response->status(),
-            'headers' => $response->headers(),
-            'body' => substr($response->body(), 0, 1000),
         ]);
 
         if (!$response->successful()) {
 
-            logger()->warning(
-                'KAA_HTTP_FAILED',
-                [
-                    'url' => $url,
-                    'status' => $response->status(),
-                ]
-            );
+            logger()->warning('KAA_HTTP_FAILED', [
+                'url' => $url,
+                'status' => $response->status(),
+                'body' => substr($response->body(), 0, 500),
+            ]);
 
             return [];
         }
@@ -53,13 +50,14 @@ private function safeGet(
 
     } catch (\Throwable $e) {
 
-        dd([
+        logger()->error('KAA_HTTP_EXCEPTION', [
+            'url' => $url,
             'exception' => get_class($e),
             'message' => $e->getMessage(),
         ]);
 
+        return [];
     }
-
 }
 
 private function safePost(
