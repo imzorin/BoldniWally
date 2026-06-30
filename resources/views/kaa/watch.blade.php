@@ -2924,6 +2924,9 @@
                         
                         const manifestResponse = await fetch(`/kaa-manifest/{{ $anime }}/${episode}`);
                         const manifestData = await manifestResponse.json();
+                        console.log('MANIFEST DATA', manifestData);
+                        console.log('MANIFEST URL', manifestData.manifest);
+                        console.log('CURRENT MANIFEST', manifest);
                         subtitleData = manifestData.subtitles || [];
                         thumbnailData = manifestData.thumbnails || null;
                         
@@ -2951,7 +2954,8 @@
                                 capLevelToPlayerSize: false
                             });
                             window.__hls = hls;
-                            
+                            console.log('NEW MANIFEST', newManifest);
+                            console.log('RAW MANIFEST', manifest);
                             hls.loadSource(newManifest);
                             hls.attachMedia(video);
                             
