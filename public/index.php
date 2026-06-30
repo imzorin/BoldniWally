@@ -2,5 +2,7 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-echo "AUTOLOAD OK";
+$app = require __DIR__.'/../bootstrap/app.php';
+
+echo "BOOTSTRAP OK";
 exit;
