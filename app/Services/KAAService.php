@@ -12,9 +12,12 @@ class KAAService
 
  
 private function safeGet(
+    
     string $url,
     array $headers = []
 ): array {
+
+dd('SAFEGET ENTERED');
 
     try {
 
@@ -53,17 +56,12 @@ private function safeGet(
 
     } catch (\Throwable $e) {
 
-        logger()->error(
-            'KAA_HTTP_EXCEPTION',
-            [
-                'url' => $url,
-                'message' => $e->getMessage(),
-            ]
-        );
+    dd([
+        'exception' => get_class($e),
+        'message' => $e->getMessage(),
+    ]);
 
-        return [];
-
-    }
+}
 
 }
 
