@@ -1380,4 +1380,19 @@ Route::get('/schedule', function () {
 
 });
 
+Route::get('/animepahe-test', function () {
+
+    $response = Http::withHeaders([
+        'User-Agent' => 'Mozilla/5.0',
+        'Accept' => 'text/html',
+    ])
+    ->timeout(15)
+    ->get('https://animepahe.ch/');
+
+    return response()->json([
+        'status' => $response->status(),
+        'length' => strlen($response->body()),
+        'first200' => substr($response->body(), 0, 200),
+    ]);
+});
 require __DIR__.'/auth.php';
