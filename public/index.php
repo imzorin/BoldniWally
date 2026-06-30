@@ -2,20 +2,27 @@
 
 use Illuminate\Http\Request;
 
-echo "STEP 1<br>";
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 require __DIR__.'/../vendor/autoload.php';
 
-echo "STEP 2<br>";
-
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
-echo "STEP 3<br>";
+try {
 
-$request = Request::capture();
+    $app->handleRequest(Request::capture());
 
-echo "STEP 4<br>";
+} catch (Throwable $e) {
 
-$app->handleRequest($request);
+    echo "<pre>";
 
-echo "STEP 5<br>";
+    echo get_class($e).PHP_EOL.PHP_EOL;
+
+    echo $e->getMessage().PHP_EOL.PHP_EOL;
+
+    echo $e->getFile().":".$e->getLine().PHP_EOL.PHP_EOL;
+
+    echo $e->getTraceAsString();
+
+}
