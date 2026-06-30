@@ -904,9 +904,9 @@ Route::get('/test-today', function () {
 
     $kaa = new \App\Services\KAAService();
 
-    dd(
-        $kaa->todayReleases()
-    );
+   dd(
+    $kaa->schedule()
+);
 
 });
 
