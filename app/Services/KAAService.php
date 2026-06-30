@@ -45,11 +45,7 @@ private function safeGet(
             return [];
         }
 
-        dd([
-    'status' => $response->status(),
-    'headers' => $response->headers(),
-    'body' => $response->body(),
-]);
+        return $response->json() ?? [];
 
     } catch (\Throwable $e) {
 
@@ -548,17 +544,9 @@ public function recent(int $page = 1): array
 }
 public function schedule(): array
 {
-    return Cache::remember(
-        "kaa_schedule",
-        300,
-        function () {
-
-            return $this->safeGet(
-                "https://kaa.lt/api/schedule"
-            );
-
-        }
-    );
+  return $this->safeGet(
+    "https://kaa.lt/api/schedule"
+);
 }
 public function homepage()
 {
