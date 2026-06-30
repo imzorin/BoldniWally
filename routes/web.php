@@ -26,11 +26,11 @@ use App\Http\Controllers\DashboardController;
 */
 
 
+
+
 Route::get('/', function () {
-    return 'Render works!';
+    die('HELLO RENDER');
 });
-
-
 
 
 // Route::get('/kaa-page', function () {
