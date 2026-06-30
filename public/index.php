@@ -10,5 +10,12 @@ $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
 $response = $kernel->handle($request);
 
-echo "HANDLE OK";
+echo "BEFORE SEND<br>";
+
+$response->send();
+
+echo "<br>AFTER SEND";
+
+$kernel->terminate($request, $response);
+
 exit;
