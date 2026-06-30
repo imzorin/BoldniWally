@@ -8,5 +8,7 @@ $request = Illuminate\Http\Request::capture();
 
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
-echo "KERNEL OK";
+$response = $kernel->handle($request);
+
+echo "HANDLE OK";
 exit;
