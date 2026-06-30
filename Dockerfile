@@ -25,7 +25,7 @@ RUN mkdir -p bootstrap/cache
 # FIX PERMISSIONS
 RUN chmod -R 775 storage bootstrap/cache
 
-RUN php artisan key:generate --force || true
+
 RUN php artisan optimize || true
 
 EXPOSE 10000
