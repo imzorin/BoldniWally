@@ -4,5 +4,7 @@ require __DIR__.'/../vendor/autoload.php';
 
 $app = require __DIR__.'/../bootstrap/app.php';
 
-echo "BOOTSTRAP OK";
+$request = Illuminate\Http\Request::capture();
+
+echo "REQUEST OK";
 exit;
