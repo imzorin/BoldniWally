@@ -12,12 +12,9 @@ class KAAService
 
  
 private function safeGet(
-    
     string $url,
     array $headers = []
 ): array {
-
-dd('SAFEGET ENTERED');
 
     try {
 
@@ -29,11 +26,15 @@ dd('SAFEGET ENTERED');
         )
         ->connectTimeout(5)
         ->timeout(10)
-        ->retry(
-            2,
-            500
-        )
+        ->retry(2, 500)
         ->get($url);
+
+        dd([
+            'url' => $url,
+            'status' => $response->status(),
+            'headers' => $response->headers(),
+            'body' => substr($response->body(), 0, 1000),
+        ]);
 
         if (!$response->successful()) {
 
@@ -48,20 +49,16 @@ dd('SAFEGET ENTERED');
             return [];
         }
 
-        dd([
-    'status' => $response->status(),
-    'headers' => $response->headers(),
-    'body' => $response->body(),
-]);
+        return $response->json() ?? [];
 
     } catch (\Throwable $e) {
 
-    dd([
-        'exception' => get_class($e),
-        'message' => $e->getMessage(),
-    ]);
+        dd([
+            'exception' => get_class($e),
+            'message' => $e->getMessage(),
+        ]);
 
-}
+    }
 
 }
 
