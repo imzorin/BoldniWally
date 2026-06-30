@@ -10,6 +10,11 @@ $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
 $response = $kernel->handle($request);
 
-var_dump(get_class($response));
+echo "<pre>";
+var_dump($response->getStatusCode());
+
+echo "\n\n====================\n\n";
+
+echo $response->getContent();
 
 exit;
