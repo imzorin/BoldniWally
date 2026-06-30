@@ -6,5 +6,7 @@ $app = require __DIR__.'/../bootstrap/app.php';
 
 $request = Illuminate\Http\Request::capture();
 
-echo "REQUEST OK";
+$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+
+echo "KERNEL OK";
 exit;
