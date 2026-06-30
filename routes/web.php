@@ -25,8 +25,108 @@ use App\Http\Controllers\DashboardController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return 'HELLO BRODER';
+Route::get('/', function (KAAService $kaa) {
+    
+
+    $page = request('page', 1);
+
+    $data = $kaa->recent($page);
+        
+
+    $trending = collect(
+        $data['result'] ?? []
+    )
+    ->where('language', 'ja-JP')
+    ->map(function ($anime) {
+return [
+
+    'title' => $anime['title'] ?? '',
+    'poster' => $anime['poster']['hq'] ?? '',
+    'slug' => $anime['slug'] ?? '',
+
+    'episode' => $anime['episode_number'] ?? null,
+    'type' => strtoupper($anime['type'] ?? ''),
+    'year' => $anime['year'] ?? '',
+    'rating' => $anime['rating'] ?? '',
+
+];
+
+    })
+    ->values()
+    ->toArray();
+
+    $hasNext = $data['hadNext'] ?? false;
+
+$schedule = $kaa->schedule();
+
+$currentDay = strtolower(now()->format('l'));
+
+$todayReleases = collect($schedule)
+
+    ->filter(function ($anime) use ($currentDay) {
+
+        if (!isset($anime['ts'])) {
+            return false;
+        }
+
+        $animeDay = strtolower(
+            \Carbon\Carbon::createFromTimestampMs(
+                $anime['ts']
+            )->format('l')
+        );
+
+        return $animeDay === $currentDay;
+
+    })
+
+    ->map(function ($anime) {
+
+        return [
+
+            'title'  => $anime['title'] ?? '',
+            'slug'   => $anime['slug'] ?? '',
+            'poster' => $anime['poster']['sm'] ?? '',
+
+            'time' => \Carbon\Carbon::createFromTimestampMs(
+                $anime['ts']
+            )->format('h:i A'),
+
+        ];
+
+    })
+
+    ->sortBy('time')
+    ->take(10)
+    ->values()
+    ->toArray();
+
+
+    $upcoming = [];
+    $continueWatching = collect();
+
+    $favoritesCount = 0;
+    $watchlistCount = 0;
+    $reviewsCount = 0;
+    $currentlyWatchingCount = 0;
+    $recentlyWatched = collect();
+
+    return view(
+        'welcome',
+        compact(
+            'hasNext',
+            'page',
+            'trending',
+            'todayReleases',
+            'upcoming',
+            'continueWatching',
+            'favoritesCount',
+            'watchlistCount',
+            'reviewsCount',
+            'currentlyWatchingCount',
+            'recentlyWatched'
+        )
+    );
+
 });
 Route::get('/kaa-page', function () {
 
