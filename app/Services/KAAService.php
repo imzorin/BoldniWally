@@ -45,7 +45,11 @@ private function safeGet(
             return [];
         }
 
-        return $response->json() ?? [];
+        dd([
+    'status' => $response->status(),
+    'headers' => $response->headers(),
+    'body' => $response->body(),
+]);
 
     } catch (\Throwable $e) {
 
