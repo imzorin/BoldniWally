@@ -4,17 +4,23 @@ require __DIR__.'/../vendor/autoload.php';
 
 $app = require __DIR__.'/../bootstrap/app.php';
 
-$request = Illuminate\Http\Request::capture();
+try {
 
-$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+    $request = Illuminate\Http\Request::capture();
 
-$response = $kernel->handle($request);
+    $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
-echo "<pre>";
-var_dump($response->getStatusCode());
+    $response = $kernel->handle($request);
 
-echo "\n\n====================\n\n";
+    echo "<pre>";
+    var_dump($response->getStatusCode());
+    echo "\n\n";
+    echo $response->getContent();
 
-echo $response->getContent();
+} catch (\Throwable $e) {
 
-exit;
+    echo "<h2>EXCEPTION CAUGHT</h2>";
+
+    echo "<pre>";
+    echo $e;
+}
