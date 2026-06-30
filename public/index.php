@@ -10,12 +10,6 @@ $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
 $response = $kernel->handle($request);
 
-echo "BEFORE SEND<br>";
-
-$response->send();
-
-echo "<br>AFTER SEND";
-
-$kernel->terminate($request, $response);
+var_dump(get_class($response));
 
 exit;
