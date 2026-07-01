@@ -25,7 +25,7 @@ private function safeGet(
             ], $headers)
         )
         ->connectTimeout(2)
-        ->timeout(3)
+        ->timeout(5)
         ->retry(1, 300)
         ->get($url);
 
