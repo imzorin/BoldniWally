@@ -9,7 +9,7 @@
            class="btn btn-outline-secondary anime-page"
            data-page="{{ $page - 1 }}"
            data-section="anime-directory"
-           data-url="{{ url('/anime-directory') }}">
+           data-url="/anime-directory"
             <i class="bi bi-chevron-left"></i>
             Prev
         </a>
@@ -50,7 +50,7 @@
 
 <div class="row g-2">
 @foreach($animeList as $item)
-<div class="col-6 col-md-4 col-xl-2 d-flex">
+<div class="col-3 col-md-2 col-xl-2 d-flex">
     <div class="anime-card w-100">
         <a href="/kaa-anime/{{ $item['slug'] }}"
            class="card-link">

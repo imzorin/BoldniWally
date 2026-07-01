@@ -116,7 +116,7 @@
 <!-- Anime Grid -->
 <div class="row g-2">
     @foreach($trending as $anime)
-    <div class="col-6 col-md-4 col-xl-2">
+    <div class="col-3 col-md-2 col-xl-2">
         <div class="anime-card">
             <a href="/kaa-anime/{{ $anime['slug'] }}" class="card-link">
                 <img src="https://kaa.lt/image/poster/{{ $anime['poster'] }}.webp" 

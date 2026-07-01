@@ -1,6 +1,6 @@
 <div class="row g-2">
 @foreach($anime as $item)
-<div class="col-6 col-md-4 col-xl-2">
+<div class="col-3 col-md-2 col-xl-2">
     <div class="anime-card">
         <a href="/anime/{{ $item['mal_id'] }}" class="card-link">
             <img

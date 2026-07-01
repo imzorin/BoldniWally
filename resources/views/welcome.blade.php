@@ -217,7 +217,7 @@
       opacity: 0;
     }
 
-    /* large character artwork */
+    /* large character artwork - FIXED */
     .hero-artwork {
       width: 100%;
       max-width: 900px;
@@ -226,12 +226,12 @@
       filter: drop-shadow(0 8px 40px rgba(37,99,235,0.2));
       transition: transform 0.3s ease;
     }
-    .hero-artwork img {
+
+    .hero-team {
+      display: block;
       width: 100%;
       height: auto;
       object-fit: contain;
-      display: block;
-      aspect-ratio: 16/12;
       max-height: 520px;
       image-rendering: auto;
       background: transparent;
@@ -415,39 +415,125 @@
     .mobile-nav-toggle { display: none; background: none; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 1.2rem; cursor: pointer; transition: all 0.3s ease; }
     .mobile-nav-toggle:hover { border-color: var(--accent-color); color: var(--text-primary); }
 
-    /* skeleton */
-    .skeleton-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1.2rem; }
-    .skeleton-card { background: var(--bg-card); border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); }
-    .skeleton-card .skeleton-img { aspect-ratio: 2/3; width: 100%; background: linear-gradient(90deg, #1a2332 25%, #2a3344 50%, #1a2332 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; }
-    .skeleton-card .skeleton-text { height: 12px; margin: 12px 12px 8px; background: linear-gradient(90deg, #1a2332 25%, #2a3344 50%, #1a2332 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: 4px; }
-    .skeleton-card .skeleton-text.short { width: 60%; }
-    .skeleton-card .skeleton-text.tall { height: 16px; }
-    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    /* ===== UPDATED SKELETON - Using Bootstrap grid classes ===== */
+    .skeleton-grid .row {
+      --bs-gutter-x: 0.5rem;
+      --bs-gutter-y: 0.5rem;
+    }
+    
+    .skeleton-card {
+      background: var(--bg-card);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      height: 100%;
+    }
+    
+    .skeleton-card .skeleton-img {
+      aspect-ratio: 2/3;
+      width: 100%;
+      background: linear-gradient(90deg, #1a2332 25%, #2a3344 50%, #1a2332 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s infinite;
+    }
+    
+    .skeleton-card .skeleton-text {
+      height: 12px;
+      margin: 12px 12px 8px;
+      background: linear-gradient(90deg, #1a2332 25%, #2a3344 50%, #1a2332 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s infinite;
+      border-radius: 4px;
+    }
+    
+    .skeleton-card .skeleton-text.short {
+      width: 60%;
+    }
+    
+    .skeleton-card .skeleton-text.tall {
+      height: 16px;
+    }
+    
+    /* Skeleton card body to match real cards */
+    .skeleton-card .skeleton-body {
+      padding: 0.75rem;
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
 
     .fade-enter { opacity: 0; transition: opacity 0.18s ease; }
     .fade-enter-active { opacity: 1; }
     #contentContainer { transition: opacity 0.18s ease; }
 
-    /* Responsive */
-    @media (max-width: 1200px) {
+    /* ============================================================== */
+    /*  MOBILE-ONLY: reduce top spacing before hero artwork by ~25px  */
+    /* ============================================================== */
+    @media (max-width: 768px) {
       .hero-artwork {
-        max-width: 750px;
+        margin-top: -8px;
+        margin-bottom: 0.6rem;
       }
-      .hero-artwork img {
-        max-height: 450px;
+      .hero-brand {
+        margin-top: 0.25rem;
+        margin-bottom: 0.15rem;
       }
-      .hero-brand .brand-name {
-        font-size: 4.2rem;
-      }
-      .hero-brand .brand-sub {
-        font-size: 1.3rem;
-      }
-      .hero-brand .brand-jp {
-        font-size: 1.1rem;
+      .hero-search {
+        margin-top: 0.75rem;
       }
     }
 
+    @media (max-width: 576px) {
+      .hero-artwork {
+        margin-top: -6px;
+        margin-bottom: 0rem;
+      }
+      .hero-brand {
+        margin-top: 0.15rem;
+        margin-bottom: 0.1rem;
+      }
+      .hero-search {
+        margin-top: 0.5rem;
+      }
+    }
+
+    /* ============================================================== */
+    /*  MOBILE LAYOUT: true mobile section, not a squeezed sidebar    */
+    /* ============================================================== */
     @media (max-width: 992px) {
+      .app-body {
+        display: block;
+      }
+      .app-sidebar {
+        display: none;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        bottom: 0;
+        width: 280px;
+        background-color: var(--bg-sidebar);
+        border-right: 1px solid var(--border-color);
+        z-index: 999;
+        padding-top: 1rem;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+      }
+      .app-sidebar.open {
+        display: block;
+      }
+      .app-main {
+        padding: 1rem;
+        width: 100%;
+        flex: none;
+      }
+      .mobile-nav-toggle {
+        display: block;
+      }
+      .header-search {
+        max-width: 260px;
+      }
       .hero-header {
         min-height: calc(100vh - 60px);
         padding: 1rem 0 1.5rem 0;
@@ -455,7 +541,7 @@
       .hero-artwork {
         max-width: 550px;
       }
-      .hero-artwork img {
+      .hero-team {
         max-height: 350px;
       }
       .hero-brand .brand-name {
@@ -471,11 +557,170 @@
       .hero-search {
         max-width: 600px;
       }
-      .app-releases { display: none; }
-      .app-sidebar { display: none; position: fixed; top: 60px; left: 0; bottom: 0; width: 280px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); z-index: 999; padding-top: 1rem; }
-      .app-sidebar.open { display: block; }
-      .mobile-nav-toggle { display: block; }
-      .header-search { max-width: 260px; }
+    }
+
+    /* ===== TRUE MOBILE LAYOUT: strip all desktop sidebar styling ===== */
+    @media (max-width: 768px) {
+      /* --- container: normal section, no sidebar baggage --- */
+      .app-releases {
+        position: static;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        padding: 0;
+        margin: 24px 0;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        overflow: visible;
+        flex-shrink: 1;
+        border-top: none;
+      }
+
+      /* --- title: keep the same style, just let it breathe --- */
+      .app-releases .section-title {
+        padding: 0 4px;
+        margin-bottom: 16px;
+        font-size: 1.25rem;
+      }
+
+      /* --- list: vertical flex, not grid --- */
+      .app-releases .release-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+      }
+
+      /* --- each card: full width, proper padding, natural spacing --- */
+      .app-releases .release-item {
+        width: 100%;
+        max-width: 100%;
+        display: flex;
+        align-items: center;
+        padding: 14px;
+        margin: 0;
+        border-radius: 12px;
+        gap: 14px;
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-color);
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+      }
+      .app-releases .release-item:hover {
+        transform: translateX(0);
+        background-color: var(--bg-card-hover);
+        border-color: var(--border-hover);
+      }
+
+      /* --- thumbnail: slightly larger for mobile tap targets --- */
+      .app-releases .release-thumb {
+        width: 56px;
+        height: 80px;
+        flex-shrink: 0;
+        border-radius: 6px;
+      }
+
+      /* --- text: allow wrapping, no aggressive truncation --- */
+      .app-releases .release-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .app-releases .release-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+        line-height: 1.3;
+        margin-bottom: 4px;
+      }
+      .app-releases .release-time {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* --- badge: keep the same style --- */
+      .app-releases .release-badge {
+        flex-shrink: 0;
+        font-size: 0.6rem;
+        padding: 4px 10px;
+      }
+
+      /* --- View More: full width, centered, properly spaced --- */
+      .app-releases .view-more-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 100%;
+        margin-top: 18px;
+        padding: 14px;
+        border-radius: 12px;
+        background-color: var(--bg-card);
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        font-weight: 500;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+      }
+      .app-releases .view-more-btn:hover {
+        background-color: var(--bg-card-hover);
+        border-color: var(--border-hover);
+        color: var(--text-primary);
+      }
+      .app-releases .view-more-btn i {
+        margin-left: 6px;
+        transition: transform 0.3s ease;
+      }
+      .app-releases .view-more-btn:hover i {
+        transform: translateX(4px);
+      }
+    }
+
+    /* small extra polish for very narrow screens */
+    @media (max-width: 480px) {
+      .app-releases .release-item {
+        padding: 12px;
+        gap: 12px;
+      }
+      .app-releases .release-thumb {
+        width: 48px;
+        height: 68px;
+      }
+      .app-releases .release-title {
+        font-size: 0.85rem;
+      }
+      .app-releases .view-more-btn {
+        padding: 12px;
+        font-size: 0.85rem;
+      }
+    }
+
+    /* Responsive (keep existing) */
+    @media (max-width: 1200px) {
+      .hero-artwork {
+        max-width: 750px;
+      }
+      .hero-team {
+        max-height: 450px;
+      }
+      .hero-brand .brand-name {
+        font-size: 4.2rem;
+      }
+      .hero-brand .brand-sub {
+        font-size: 1.3rem;
+      }
+      .hero-brand .brand-jp {
+        font-size: 1.1rem;
+      }
     }
 
     @media (max-width: 768px) {
@@ -486,7 +731,7 @@
       .hero-artwork {
         max-width: 400px;
       }
-      .hero-artwork img {
+      .hero-team {
         max-height: 280px;
       }
       .hero-brand .brand-name {
@@ -526,9 +771,9 @@
       }
       .hero-artwork {
         max-width: 300px;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.4rem;
       }
-      .hero-artwork img {
+      .hero-team {
         max-height: 220px;
       }
       .hero-brand .brand-name {
@@ -542,7 +787,7 @@
         font-size: 0.75rem;
       }
       .hero-search {
-        margin: 1rem auto 0.1rem auto;
+        margin: 0.75rem auto 0.1rem auto;
       }
       .hero-search .search-form .form-control {
         height: 46px;
@@ -562,7 +807,7 @@
       .hero-artwork {
         max-width: 230px;
       }
-      .hero-artwork img {
+      .hero-team {
         max-height: 170px;
       }
       .hero-brand .brand-name {
@@ -600,9 +845,12 @@
     <div class="hero-content">
       <!-- Large centered character artwork -->
       <div class="hero-artwork" id="heroArtwork">
-        <img src="{{ asset('images/my-team.png') }}"
-             alt="BoldniWally Hero"
-             class="hero-team">
+       <img
+    src="/images/my-team.png?v={{ time() }}"
+    alt="BoldniWally Hero"
+    class="hero-team"
+    onerror="console.log('FAILED', this.src)"
+    onload="console.log('LOADED', this.src)">
       </div>
 
       <!-- BoldniWally Branding centerpiece -->
@@ -733,19 +981,23 @@
       window.addEventListener('load', triggerEntranceAnimations);
     }
 
-    // ----- skeleton helpers -----
+    // ===== UPDATED SKELETON - Using Bootstrap grid =====
     function skeletonGrid(count = 12) {
-      let html = '<div class="skeleton-grid">';
+      let html = '<div class="skeleton-grid"><div class="row g-2">';
       for (let i = 0; i < count; i++) {
         html += `
-          <div class="skeleton-card">
-            <div class="skeleton-img"></div>
-            <div class="skeleton-text tall"></div>
-            <div class="skeleton-text short"></div>
+          <div class="col-3 col-md-2 col-xl-2">
+            <div class="skeleton-card">
+              <div class="skeleton-img"></div>
+              <div class="skeleton-body">
+                <div class="skeleton-text tall"></div>
+                <div class="skeleton-text short"></div>
+              </div>
+            </div>
           </div>
         `;
       }
-      html += '</div>';
+      html += '</div></div>';
       return html;
     }
 
@@ -773,11 +1025,24 @@
       content.style.opacity = '1';
 
       try {
-        const separator = url.includes('?') ? '&' : '?';
-        const fetchUrl = url + separator + 'section=1';
-        const resp = await fetch(fetchUrl);
+        const fetchUrl = new URL(url, window.location.origin);
+        fetchUrl.searchParams.set('section', '1');
+
+        console.log(fetchUrl.toString());
+
+        const resp = await fetch(fetchUrl.toString(), {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        
         if (!resp.ok) throw new Error('Network error');
         const html = await resp.text();
+
+console.log("FETCH URL:", fetchUrl);
+console.log("STATUS:", resp.status);
+console.log("HTML LENGTH:", html.length);
+console.log(html.substring(0, 300));
         content.style.opacity = '0';
         setTimeout(() => {
           content.innerHTML = html;
