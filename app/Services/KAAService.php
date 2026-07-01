@@ -24,9 +24,9 @@ private function safeGet(
                 'Accept' => 'application/json',
             ], $headers)
         )
-        ->connectTimeout(5)
-        ->timeout(10)
-        ->retry(2, 500)
+        ->connectTimeout(2)
+        ->timeout(3)
+        ->retry(1, 300)
         ->get($url);
 
         // Log only (safe for production)
@@ -541,20 +541,44 @@ public function recent(int $page = 1): array
 }
 public function schedule(): array
 {
-  return $this->safeGet(
-    "https://kaa.lt/api/schedule"
-);
+    return Cache::remember(
+        'kaa_schedule',
+        600, // 10 minutes
+        function () {
+
+            return $this->safeGet(
+                'https://kaa.lt/api/schedule'
+            );
+
+        }
+    );
 }
 public function homepage()
 {
-return $this->safeHtml(
-    'https://kaa.lt'
-);
+    return Cache::remember(
+        'kaa_homepage_html',
+        600,
+        function () {
+
+            return $this->safeHtml(
+                'https://kaa.lt'
+            );
+
+        }
+    );
 }
 public function animePage($page = 1)
 {
-    return $this->safeGet(
-        "https://kaa.lt/api/anime?page={$page}"
+    return Cache::remember(
+        "kaa_anime_page_{$page}",
+        600,
+        function () use ($page) {
+
+            return $this->safeGet(
+                "https://kaa.lt/api/anime?page={$page}"
+            );
+
+        }
     );
 }
 public function popular(int $page = 1): array
