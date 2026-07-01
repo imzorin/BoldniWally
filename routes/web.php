@@ -1145,13 +1145,10 @@ logger()->info(
                     $realUrl =
                         $base . $trim;
                 }
-
-                $line =
-                    url('/kaa-cat')
-                    . '?url='
-                    . urlencode(
-                        $realUrl
-                    );
+$line =
+    secure_url('/kaa-cat')
+    . '?url='
+    . urlencode($realUrl);
             }
         }
 
@@ -1189,13 +1186,11 @@ logger()->info(
                         $audioUrl;
                 }
 
-                return 'URI="'
-                    . url('/kaa-cat')
-                    . '?url='
-                    . urlencode(
-                        $audioUrl
-                    )
-                    . '"';
+return 'URI="'
+    . secure_url('/kaa-cat')
+    . '?url='
+    . urlencode($audioUrl)
+    . '"';
             },
             $body
         );
