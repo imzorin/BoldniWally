@@ -25,6 +25,8 @@
       --accent-light: #60A5FA;
       --accent-glow: rgba(37, 99, 235, 0.25);
       --rating-color: #fbbf24;
+      --header-height: 64px;
+      --hero-min-height: calc(100vh - var(--header-height));
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -46,79 +48,14 @@
     /* layout */
     .app-container { display: flex; flex-direction: column; min-height: 100vh; }
 
-    /* ===== HEADER (sticky, minimal) ===== */
+    /* ===== HEADER (sticky, minimal - hidden) ===== */
     .app-header {
-      background-color: var(--bg-sidebar);
-      border-bottom: 1px solid var(--border-color);
-      padding: 0.4rem 0;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      backdrop-filter: blur(10px);
-      height: 60px;
-      display: flex;
-      align-items: center;
-    }
-    .header-content {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1.5rem;
-    }
-    .brand-section {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      flex-shrink: 0;
-    }
-    .brand-section .brand-text {
       display: none;
     }
-    .brand-mascot {
-      width: 36px;
-      height: 36px;
-      object-fit: contain;
-      flex-shrink: 0;
-    }
-    .header-search {
-      flex: 1;
-      max-width: 400px;
-      margin: 0 auto;
-      width: 100%;
-    }
-    .header-search .search-form .form-control {
-      background-color: var(--bg-input);
-      border: 1px solid var(--border-color);
-      color: var(--text-primary);
-      border-radius: 50px;
-      padding: 0.4rem 1.2rem;
-      font-size: 0.85rem;
-      height: 38px;
-      transition: all 0.3s ease;
-    }
-    .header-search .search-form .form-control:focus {
-      border-color: var(--accent-color);
-      box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
-    }
-    .header-search .search-form .btn-search {
-      position: absolute;
-      right: 4px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: linear-gradient(135deg, #2563EB, #3B82F6);
-      border: none;
-      border-radius: 50px;
-      padding: 0.25rem 1rem;
-      color: white;
-      font-weight: 600;
-      font-size: 0.75rem;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
 
-    /* ===== HERO HEADER (optimized for first view) ===== */
+    /* ============================================================== */
+    /*  HERO SECTION - Premium Collapsible for All Devices           */
+    /* ============================================================== */
     .hero-header {
       position: relative;
       width: 100%;
@@ -128,11 +65,29 @@
                   var(--bg-dark);
       border-bottom: 1px solid var(--border-color);
       overflow: hidden;
-      min-height: calc(100vh - 60px);
+      min-height: var(--hero-min-height);
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: min-height 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                  padding 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.5s ease,
+                  margin 0.5s ease;
+      will-change: min-height, padding, opacity, margin;
     }
+
+    /* Collapsed state */
+    .hero-header.collapsed {
+      min-height: 0 !important;
+      height: 0 !important;
+      padding: 0 !important;
+      opacity: 0;
+      border-bottom: none;
+      pointer-events: none;
+      margin: 0;
+      overflow: hidden;
+    }
+
     /* subtle star particles */
     .hero-header::after {
       content: '';
@@ -158,6 +113,257 @@
       margin: 0 auto;
       padding: 0 2rem;
       width: 100%;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.5s ease;
+      will-change: transform, opacity;
+    }
+
+    .hero-header.collapsed .hero-content {
+      transform: scale(0.8);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ===== PREMIUM COMPACT STICKY HEADER ===== */
+    .compact-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      background: rgba(11, 16, 32, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(59, 130, 246, 0.08);
+      padding: 0 1.5rem;
+      height: var(--header-height);
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      transform: translateY(-100%);
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.4s ease,
+                  box-shadow 0.4s ease;
+      will-change: transform, opacity;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      gap: 1rem;
+    }
+
+    .compact-header.visible {
+      transform: translateY(0);
+      display: flex;
+      opacity: 1;
+    }
+
+    /* Left section: menu + hero banner + brand */
+    .compact-header .compact-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* ===== UNIFIED ACTION BUTTONS ===== */
+    .compact-header .action-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      padding: 0.5rem 0.6rem;
+      border-radius: 10px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 40px;
+      min-height: 40px;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      flex-shrink: 0;
+    }
+
+    .compact-header .action-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
+      color: var(--text-primary);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .compact-header .action-btn:active {
+      transform: scale(0.92);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .compact-header .action-btn i {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    /* Hero banner thumbnail */
+    .compact-header .compact-hero-banner {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 1px solid rgba(59, 130, 246, 0.12);
+      background: var(--bg-input);
+      position: relative;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+    }
+
+    .compact-header .compact-hero-banner:hover {
+      border-color: rgba(59, 130, 246, 0.3);
+      transform: scale(1.02);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .compact-header .compact-hero-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Brand text */
+    .compact-header .compact-brand {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+      min-width: 0;
+      cursor: pointer;
+    }
+
+    .compact-header .compact-brand .brand-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      background: linear-gradient(135deg, #ffffff 30%, #60A5FA 70%, #2563EB 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      white-space: nowrap;
+      transition: font-size 0.3s ease;
+    }
+
+    .compact-header .compact-brand .brand-sub {
+      font-size: 0.55rem;
+      font-weight: 400;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: rgba(148, 163, 184, 0.6);
+      white-space: nowrap;
+    }
+
+    .compact-header .compact-brand .brand-jp {
+      font-size: 0.5rem;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+      color: rgba(100, 116, 139, 0.4);
+      white-space: nowrap;
+      display: none;
+    }
+
+    /* Right section: actions */
+    .compact-header .compact-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    /* ===== SIMPLIFIED SEARCH OVERLAY ===== */
+    .search-overlay {
+      position: fixed;
+      top: var(--header-height);
+      left: 0;
+      right: 0;
+      z-index: 998;
+      background: rgba(11, 16, 32, 0.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.75rem 1.5rem;
+      border-bottom: 1px solid rgba(59, 130, 246, 0.06);
+      transform: translateY(-100%);
+      opacity: 0;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.35s ease;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .search-overlay.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .search-overlay .search-form {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .search-overlay .search-form .search-input {
+      flex: 1;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      border-radius: 50px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.95rem;
+      height: 44px;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .search-overlay .search-form .search-input:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+      outline: none;
+      background: var(--bg-input);
+      color: var(--text-primary);
+    }
+
+    .search-overlay .search-form .search-input::placeholder {
+      color: var(--text-secondary);
+      font-weight: 300;
+    }
+
+    /* Close button - unified styling */
+    .search-overlay .search-close {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      padding: 0.4rem 0.5rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+      min-height: 36px;
+      flex-shrink: 0;
+    }
+
+    .search-overlay .search-close:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
     }
 
     /* ===== ANIMATIONS - Initial load only ===== */
@@ -217,14 +423,17 @@
       opacity: 0;
     }
 
-    /* large character artwork - FIXED */
+    /* large character artwork */
     .hero-artwork {
       width: 100%;
       max-width: 900px;
       margin: 0 auto 1.2rem auto;
       display: block;
       filter: drop-shadow(0 8px 40px rgba(37,99,235,0.2));
-      transition: transform 0.3s ease;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.5s ease,
+                  margin 0.5s ease;
+      will-change: transform, opacity, margin;
     }
 
     .hero-team {
@@ -241,6 +450,10 @@
     .hero-brand {
       margin: 0.75rem 0 0.25rem 0;
       line-height: 1.2;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.5s ease,
+                  margin 0.5s ease;
+      will-change: transform, opacity, margin;
     }
     .hero-brand .brand-name {
       font-size: 5rem;
@@ -253,6 +466,7 @@
       text-shadow: 0 0 40px rgba(37,99,235,0.4);
       display: inline-block;
       filter: drop-shadow(0 4px 20px rgba(37,99,235,0.3));
+      transition: font-size 0.4s ease;
     }
     .hero-brand .brand-sub {
       display: block;
@@ -263,6 +477,7 @@
       color: var(--text-secondary);
       margin-top: 0.15rem;
       opacity: 0.85;
+      transition: font-size 0.4s ease, opacity 0.4s ease;
     }
     .hero-brand .brand-jp {
       display: block;
@@ -272,6 +487,7 @@
       color: var(--text-muted);
       margin-top: 0.2rem;
       font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+      transition: font-size 0.4s ease, opacity 0.4s ease;
     }
 
     /* search bar in hero */
@@ -279,6 +495,10 @@
       max-width: 700px;
       margin: 1.5rem auto 0.2rem auto;
       width: 100%;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.5s ease,
+                  margin 0.5s ease;
+      will-change: transform, opacity, margin;
     }
     .hero-search .search-form {
       position: relative;
@@ -340,11 +560,19 @@
       pointer-events: none;
       position: relative;
       z-index: 1;
+      transition: opacity 0.5s ease, height 0.5s ease, margin 0.5s ease;
+    }
+
+    .hero-header.collapsed + .hero-fade {
+      opacity: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
     }
 
     /* ----- rest of existing layout (sidebar, main, cards) ----- */
     .app-body { display: flex; flex: 1; }
-    .app-sidebar { width: 220px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); padding: 1.5rem 0; flex-shrink: 0; position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto; }
+    .app-sidebar { width: 220px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); padding: 1.5rem 0; flex-shrink: 0; position: sticky; top: var(--header-height); height: calc(100vh - var(--header-height)); overflow-y: auto; }
     .sidebar-nav { display: flex; flex-direction: column; gap: 0.25rem; padding: 0 0.75rem; }
     .sidebar-nav .nav-link { color: var(--text-secondary); font-weight: 500; padding: 0.6rem 1rem; transition: all 0.3s ease; text-decoration: none; border-radius: 10px; display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; cursor: pointer; }
     .sidebar-nav .nav-link i { font-size: 1.1rem; width: 1.4rem; text-align: center; }
@@ -353,7 +581,7 @@
     .sidebar-nav .nav-link.active i { color: white; }
 
     .app-main { flex: 1; padding: 1.5rem 2rem; min-width: 0; }
-    .app-releases { width: 280px; padding: 1.5rem 1.5rem 1.5rem 0; flex-shrink: 0; position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto; }
+    .app-releases { width: 280px; padding: 1.5rem 1.5rem 1.5rem 0; flex-shrink: 0; position: sticky; top: var(--header-height); height: calc(100vh - var(--header-height)); overflow-y: auto; }
     .section-title { color: var(--text-primary); font-weight: 700; font-size: 1.3rem; margin-bottom: 1.2rem; letter-spacing: -0.3px; }
 
     /* cards, releases, continue, etc */
@@ -412,10 +640,9 @@
     .view-more-btn i { margin-left: 0.3rem; transition: transform 0.3s ease; }
     .view-more-btn:hover i { transform: translateX(4px); }
 
-    .mobile-nav-toggle { display: none; background: none; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 1.2rem; cursor: pointer; transition: all 0.3s ease; }
-    .mobile-nav-toggle:hover { border-color: var(--accent-color); color: var(--text-primary); }
-
-    /* ===== UPDATED SKELETON - Using Bootstrap grid classes ===== */
+    /* ============================================================
+       SKELETON - Matches final 2-card layout
+       ============================================================ */
     .skeleton-grid .row {
       --bs-gutter-x: 0.5rem;
       --bs-gutter-y: 0.5rem;
@@ -427,6 +654,8 @@
       overflow: hidden;
       border: 1px solid var(--border-color);
       height: 100%;
+      display: flex;
+      flex-direction: column;
     }
     
     .skeleton-card .skeleton-img {
@@ -437,26 +666,46 @@
       animation: shimmer 1.2s infinite;
     }
     
+    .skeleton-card .skeleton-body {
+      padding: 0.75rem;
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    
     .skeleton-card .skeleton-text {
       height: 12px;
-      margin: 12px 12px 8px;
       background: linear-gradient(90deg, #1a2332 25%, #2a3344 50%, #1a2332 75%);
       background-size: 200% 100%;
       animation: shimmer 1.2s infinite;
       border-radius: 4px;
     }
     
-    .skeleton-card .skeleton-text.short {
-      width: 60%;
-    }
-    
-    .skeleton-card .skeleton-text.tall {
+    .skeleton-card .skeleton-text.title-line {
       height: 16px;
+      min-height: 2.2em;
     }
     
-    /* Skeleton card body to match real cards */
-    .skeleton-card .skeleton-body {
-      padding: 0.75rem;
+    .skeleton-card .skeleton-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 0.35rem;
+      margin-top: auto;
+      padding-top: 0.1rem;
+    }
+    
+    .skeleton-card .skeleton-badge {
+      height: 20px;
+      width: 45px;
+      background: linear-gradient(90deg, #1a2332 25%, #2a3344 50%, #1a2332 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s infinite;
+      border-radius: 20px;
+    }
+    
+    .skeleton-card .skeleton-badge.year {
+      width: 35px;
     }
     
     @keyframes shimmer {
@@ -469,47 +718,97 @@
     #contentContainer { transition: opacity 0.18s ease; }
 
     /* ============================================================== */
-    /*  MOBILE-ONLY: reduce top spacing before hero artwork by ~25px  */
+    /*  RESPONSIVE: Compact Header & Hero Behavior                   */
     /* ============================================================== */
-    @media (max-width: 768px) {
-      .hero-artwork {
-        margin-top: -8px;
-        margin-bottom: 0.6rem;
+
+    /* Desktop (>= 992px) */
+    @media (min-width: 992px) {
+      .compact-header {
+        display: flex;
       }
-      .hero-brand {
-        margin-top: 0.25rem;
-        margin-bottom: 0.15rem;
+      
+      .app-header {
+        display: none !important;
       }
-      .hero-search {
-        margin-top: 0.75rem;
+      
+      .hero-header {
+        min-height: calc(100vh - var(--header-height));
+        padding: 1rem 0 2rem 0;
+      }
+      
+      .hero-header.collapsed {
+        min-height: 0 !important;
+        height: 0 !important;
+        padding: 0 !important;
+        opacity: 0;
+        border-bottom: none;
+        pointer-events: none;
+        margin: 0;
+        overflow: hidden;
+      }
+      
+      .hero-header.collapsed .hero-content {
+        transform: scale(0.8);
+        opacity: 0;
+        pointer-events: none;
+      }
+      
+      .app-sidebar {
+        top: var(--header-height);
+        height: calc(100vh - var(--header-height));
+      }
+      
+      .app-releases {
+        top: var(--header-height);
+        height: calc(100vh - var(--header-height));
+      }
+
+      .search-overlay .search-form {
+        max-width: 500px;
       }
     }
 
-    @media (max-width: 576px) {
-      .hero-artwork {
-        margin-top: -6px;
-        margin-bottom: 0rem;
+    /* Mobile (< 992px) */
+    @media (max-width: 991.98px) {
+      .compact-header {
+        display: flex;
+        padding: 0 1rem;
+        height: 60px;
       }
-      .hero-brand {
-        margin-top: 0.15rem;
-        margin-bottom: 0.1rem;
+      
+      .app-header {
+        display: none !important;
       }
-      .hero-search {
-        margin-top: 0.5rem;
+      
+      .hero-header {
+        min-height: calc(100vh - var(--header-height));
+        padding: 0.5rem 0 1.5rem 0;
       }
-    }
-
-    /* ============================================================== */
-    /*  MOBILE LAYOUT: true mobile section, not a squeezed sidebar    */
-    /* ============================================================== */
-    @media (max-width: 992px) {
+      
+      .hero-header.collapsed {
+        min-height: 0 !important;
+        height: 0 !important;
+        padding: 0 !important;
+        opacity: 0;
+        border-bottom: none;
+        pointer-events: none;
+        margin: 0;
+        overflow: hidden;
+      }
+      
+      .hero-header.collapsed .hero-content {
+        transform: scale(0.8);
+        opacity: 0;
+        pointer-events: none;
+      }
+      
       .app-body {
         display: block;
       }
       .app-sidebar {
         display: none;
         position: fixed;
-        top: 60px;
+        top: var(--header-height);
         left: 0;
         bottom: 0;
         width: 280px;
@@ -517,7 +816,7 @@
         border-right: 1px solid var(--border-color);
         z-index: 999;
         padding-top: 1rem;
-        height: calc(100vh - 60px);
+        height: calc(100vh - var(--header-height));
         overflow-y: auto;
       }
       .app-sidebar.open {
@@ -527,41 +826,8 @@
         padding: 1rem;
         width: 100%;
         flex: none;
+        padding-top: 0.5rem;
       }
-      .mobile-nav-toggle {
-        display: block;
-      }
-      .header-search {
-        max-width: 260px;
-      }
-      .hero-header {
-        min-height: calc(100vh - 60px);
-        padding: 1rem 0 1.5rem 0;
-      }
-      .hero-artwork {
-        max-width: 550px;
-      }
-      .hero-team {
-        max-height: 350px;
-      }
-      .hero-brand .brand-name {
-        font-size: 3.5rem;
-      }
-      .hero-brand .brand-sub {
-        font-size: 1.1rem;
-        letter-spacing: 4px;
-      }
-      .hero-brand .brand-jp {
-        font-size: 1rem;
-      }
-      .hero-search {
-        max-width: 600px;
-      }
-    }
-
-    /* ===== TRUE MOBILE LAYOUT: strip all desktop sidebar styling ===== */
-    @media (max-width: 768px) {
-      /* --- container: normal section, no sidebar baggage --- */
       .app-releases {
         position: static;
         width: 100%;
@@ -576,15 +842,6 @@
         flex-shrink: 1;
         border-top: none;
       }
-
-      /* --- title: keep the same style, just let it breathe --- */
-      .app-releases .section-title {
-        padding: 0 4px;
-        margin-bottom: 16px;
-        font-size: 1.25rem;
-      }
-
-      /* --- list: vertical flex, not grid --- */
       .app-releases .release-list {
         display: flex;
         flex-direction: column;
@@ -593,8 +850,6 @@
         padding: 0;
         margin: 0;
       }
-
-      /* --- each card: full width, proper padding, natural spacing --- */
       .app-releases .release-item {
         width: 100%;
         max-width: 100%;
@@ -614,19 +869,11 @@
         background-color: var(--bg-card-hover);
         border-color: var(--border-hover);
       }
-
-      /* --- thumbnail: slightly larger for mobile tap targets --- */
       .app-releases .release-thumb {
         width: 56px;
         height: 80px;
         flex-shrink: 0;
         border-radius: 6px;
-      }
-
-      /* --- text: allow wrapping, no aggressive truncation --- */
-      .app-releases .release-info {
-        flex: 1;
-        min-width: 0;
       }
       .app-releases .release-title {
         font-size: 0.9rem;
@@ -644,15 +891,11 @@
         align-items: center;
         gap: 4px;
       }
-
-      /* --- badge: keep the same style --- */
       .app-releases .release-badge {
         flex-shrink: 0;
         font-size: 0.6rem;
         padding: 4px 10px;
       }
-
-      /* --- View More: full width, centered, properly spaced --- */
       .app-releases .view-more-btn {
         display: flex;
         justify-content: center;
@@ -683,71 +926,111 @@
       .app-releases .view-more-btn:hover i {
         transform: translateX(4px);
       }
-    }
-
-    /* small extra polish for very narrow screens */
-    @media (max-width: 480px) {
-      .app-releases .release-item {
-        padding: 12px;
-        gap: 12px;
+      
+      /* Skeleton mobile - 2 cards per row */
+      .skeleton-grid .row .col-3.col-md-2.col-xl-2 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
       }
-      .app-releases .release-thumb {
-        width: 48px;
-        height: 68px;
+      
+      /* Compact header mobile adjustments */
+      .compact-header .compact-brand .brand-name {
+        font-size: 0.95rem;
       }
-      .app-releases .release-title {
-        font-size: 0.85rem;
+      .compact-header .compact-hero-banner {
+        width: 36px;
+        height: 36px;
       }
-      .app-releases .view-more-btn {
-        padding: 12px;
-        font-size: 0.85rem;
-      }
-    }
-
-    /* Responsive (keep existing) */
-    @media (max-width: 1200px) {
-      .hero-artwork {
-        max-width: 750px;
-      }
-      .hero-team {
-        max-height: 450px;
-      }
-      .hero-brand .brand-name {
-        font-size: 4.2rem;
-      }
-      .hero-brand .brand-sub {
-        font-size: 1.3rem;
-      }
-      .hero-brand .brand-jp {
+      .compact-header .action-btn {
         font-size: 1.1rem;
+        padding: 0.4rem 0.5rem;
+        min-width: 36px;
+        min-height: 36px;
       }
+      .compact-header .compact-brand .brand-jp {
+        display: none;
+      }
+
+      .search-overlay {
+        padding: 0.5rem 1rem;
+        top: 60px;
+      }
+      .search-overlay .search-form .search-input {
+        height: 40px;
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+      }
+      .search-overlay .search-close {
+        min-width: 32px;
+        min-height: 32px;
+        font-size: 1rem;
+        padding: 0.3rem 0.4rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .compact-header {
+        padding: 0 0.75rem;
+        height: 56px;
+        gap: 0.5rem;
+      }
+      .compact-header .compact-brand .brand-name {
+        font-size: 0.85rem;
+      }
+      .compact-header .compact-brand .brand-sub {
+        font-size: 0.45rem;
+        letter-spacing: 1.2px;
+      }
+      .compact-header .compact-hero-banner {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+      }
+      .compact-header .action-btn {
+        font-size: 1rem;
+        padding: 0.3rem 0.4rem;
+        min-width: 32px;
+        min-height: 32px;
+        border-radius: 8px;
+      }
+      .compact-header .compact-left {
+        gap: 0.5rem;
+      }
+
+      .search-overlay {
+        padding: 0.4rem 0.75rem;
+        top: 56px;
+      }
+      .search-overlay .search-form .search-input {
+        height: 36px;
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+      }
+      .search-overlay .search-close {
+        min-width: 28px;
+        min-height: 28px;
+        font-size: 0.9rem;
+        padding: 0.2rem 0.3rem;
+      }
+    }
+
+    /* Responsive hero sizes */
+    @media (max-width: 1200px) {
+      .hero-artwork { max-width: 750px; }
+      .hero-team { max-height: 450px; }
+      .hero-brand .brand-name { font-size: 4.2rem; }
+      .hero-brand .brand-sub { font-size: 1.3rem; }
+      .hero-brand .brand-jp { font-size: 1.1rem; }
     }
 
     @media (max-width: 768px) {
-      .hero-header {
-        min-height: calc(100vh - 60px);
-        padding: 0.5rem 0 1rem 0;
-      }
-      .hero-artwork {
-        max-width: 400px;
-      }
-      .hero-team {
-        max-height: 280px;
-      }
-      .hero-brand .brand-name {
-        font-size: 2.8rem;
-      }
-      .hero-brand .brand-sub {
-        font-size: 0.95rem;
-        letter-spacing: 3px;
-      }
-      .hero-brand .brand-jp {
-        font-size: 0.85rem;
-      }
-      .hero-search {
-        max-width: 100%;
-        padding: 0 0.5rem;
-      }
+      .hero-artwork { max-width: 400px; }
+      .hero-team { max-height: 280px; }
+      .hero-brand .brand-name { font-size: 2.8rem; }
+      .hero-brand .brand-sub { font-size: 0.95rem; letter-spacing: 3px; }
+      .hero-brand .brand-jp { font-size: 0.85rem; }
       .hero-search .search-form .form-control {
         height: 52px;
         font-size: 0.95rem;
@@ -758,37 +1041,14 @@
         padding: 0.5rem 1.5rem;
         font-size: 0.9rem;
       }
-      .header-content { flex-wrap: wrap; gap: 0.5rem; }
-      .brand-section { flex: 1; }
-      .header-search { order: 3; max-width: 100%; flex-basis: 100%; }
-      .app-main { padding: 1rem; }
     }
 
     @media (max-width: 576px) {
-      .hero-header {
-        min-height: calc(100vh - 60px);
-        padding: 0.25rem 0 0.75rem 0;
-      }
-      .hero-artwork {
-        max-width: 300px;
-        margin-bottom: 0.4rem;
-      }
-      .hero-team {
-        max-height: 220px;
-      }
-      .hero-brand .brand-name {
-        font-size: 2.2rem;
-      }
-      .hero-brand .brand-sub {
-        font-size: 0.8rem;
-        letter-spacing: 2px;
-      }
-      .hero-brand .brand-jp {
-        font-size: 0.75rem;
-      }
-      .hero-search {
-        margin: 0.75rem auto 0.1rem auto;
-      }
+      .hero-artwork { max-width: 300px; }
+      .hero-team { max-height: 220px; }
+      .hero-brand .brand-name { font-size: 2.2rem; }
+      .hero-brand .brand-sub { font-size: 0.8rem; letter-spacing: 2px; }
+      .hero-brand .brand-jp { font-size: 0.75rem; }
       .hero-search .search-form .form-control {
         height: 46px;
         font-size: 0.85rem;
@@ -800,57 +1060,76 @@
         font-size: 0.75rem;
         right: 4px;
       }
-      .app-main { padding: 0.75rem; }
     }
 
     @media (max-width: 400px) {
-      .hero-artwork {
-        max-width: 230px;
-      }
-      .hero-team {
-        max-height: 170px;
-      }
-      .hero-brand .brand-name {
-        font-size: 1.8rem;
-      }
-      .hero-brand .brand-sub {
-        font-size: 0.7rem;
-        letter-spacing: 1.5px;
-      }
-      .hero-brand .brand-jp {
-        font-size: 0.65rem;
-      }
+      .hero-artwork { max-width: 230px; }
+      .hero-team { max-height: 170px; }
+      .hero-brand .brand-name { font-size: 1.8rem; }
+      .hero-brand .brand-sub { font-size: 0.7rem; letter-spacing: 1.5px; }
+      .hero-brand .brand-jp { font-size: 0.65rem; }
     }
   </style>
 </head>
 <body>
 <div class="app-container">
-  <!-- HEADER (compact, sticky) -->
-  <header class="app-header">
-    <div class="container-fluid">
-      <div class="header-content">
-        <div class="brand-section">
-          <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle navigation">
-            <i class="bi bi-list"></i>
-          </button>
-          <img src="/images/wally-mascot.png" class="brand-mascot" alt="Wally Mascot" onerror="this.style.display='none'">
-        </div>
-
+  <!-- ===== PREMIUM COMPACT STICKY HEADER ===== -->
+  <header class="compact-header" id="compactHeader">
+    <div class="compact-left">
+      <!-- Hamburger button -->
+      <button class="action-btn" id="mobileNavToggleCompact" aria-label="Toggle navigation">
+        <i class="bi bi-list"></i>
+      </button>
+      
+      <!-- Small hero banner crop -->
+      <div class="compact-hero-banner" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="cursor:pointer;">
+        <img src="/images/my-team.png?v={{ time() }}" alt="BoldniWally" loading="lazy">
       </div>
+      
+      <!-- Brand text -->
+      <div class="compact-brand" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="cursor:pointer;">
+        <span class="brand-name">BoldniWally</span>
+        <span class="brand-sub">ANIME STREAMING</span>
+        <span class="brand-jp">アニメを楽しもう</span>
+      </div>
+    </div>
+    
+    <div class="compact-actions">
+      <!-- Search button -->
+      <button class="action-btn" id="searchToggleCompact" aria-label="Search">
+        <i class="bi bi-search"></i>
+      </button>
     </div>
   </header>
 
-  <!-- ===== HERO SECTION (optimized for first view) ===== -->
+  <!-- ===== SIMPLIFIED SEARCH OVERLAY (No Search Button) ===== -->
+  <div class="search-overlay" id="searchOverlay">
+    <form action="/search" method="GET" class="search-form" id="searchFormOverlay">
+      <input 
+        type="text" 
+        name="q" 
+        class="search-input" 
+        id="searchInputOverlay"
+        placeholder="Search anime, genres, titles..." 
+        autocomplete="off"
+        required>
+    </form>
+    <button class="search-close" id="searchClose" aria-label="Close search">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <!-- ===== HERO SECTION (collapsible on all devices) ===== -->
   <section class="hero-header" id="heroSection">
     <div class="hero-content">
       <!-- Large centered character artwork -->
       <div class="hero-artwork" id="heroArtwork">
-       <img
-    src="/images/my-team.png?v={{ time() }}"
-    alt="BoldniWally Hero"
-    class="hero-team"
-    onerror="console.log('FAILED', this.src)"
-    onload="console.log('LOADED', this.src)">
+        <img
+          src="/images/my-team.png?v={{ time() }}"
+          alt="BoldniWally Hero"
+          class="hero-team"
+          onerror="console.log('FAILED', this.src)"
+          onload="console.log('LOADED', this.src)">
       </div>
 
       <!-- BoldniWally Branding centerpiece -->
@@ -923,12 +1202,88 @@
     const content = document.getElementById('contentContainer');
     const sidebarLinks = document.querySelectorAll('.sidebar-nav .nav-link');
     const mobileToggle = document.getElementById('mobileNavToggle');
+    const mobileToggleCompact = document.getElementById('mobileNavToggleCompact');
     const sidebar = document.getElementById('appSidebar');
     const searchForm = document.getElementById('searchFormHero');
     const searchFormHeader = document.getElementById('searchFormHeader');
+    const searchFormOverlay = document.getElementById('searchFormOverlay');
+    
+    // Compact header elements
+    const compactHeader = document.getElementById('compactHeader');
+    const searchToggleCompact = document.getElementById('searchToggleCompact');
+    const searchOverlay = document.getElementById('searchOverlay');
+    const searchInputOverlay = document.getElementById('searchInputOverlay');
+    const searchClose = document.getElementById('searchClose');
+    
+    // Hero section
+    const heroSection = document.getElementById('heroSection');
 
     // Cache original home HTML
     const originalHomeHTML = content.innerHTML;
+
+    // ===== HERO COLLAPSE ON SCROLL (all devices) =====
+    let isHeroCollapsed = false;
+    let scrollTimeout = null;
+
+    function handleHeroScroll() {
+      const scrollY = window.scrollY;
+      const heroHeight = heroSection ? heroSection.offsetHeight : 0;
+      const triggerPoint = heroHeight * 0.1;
+      
+      if (scrollY > triggerPoint && !isHeroCollapsed) {
+        heroSection.classList.add('collapsed');
+        compactHeader.classList.add('visible');
+        isHeroCollapsed = true;
+      } else if (scrollY <= triggerPoint && isHeroCollapsed) {
+        heroSection.classList.remove('collapsed');
+        compactHeader.classList.remove('visible');
+        isHeroCollapsed = false;
+        // Close search overlay if open
+        if (isSearchOpen) toggleSearch(false);
+      }
+    }
+
+    function throttledScroll() {
+      if (scrollTimeout) {
+        window.cancelAnimationFrame(scrollTimeout);
+      }
+      scrollTimeout = window.requestAnimationFrame(() => {
+        handleHeroScroll();
+        scrollTimeout = null;
+      });
+    }
+
+    // ===== SIMPLIFIED SEARCH TOGGLE =====
+    let isSearchOpen = false;
+
+    function toggleSearch(open) {
+      if (open !== undefined) {
+        isSearchOpen = open;
+      } else {
+        isSearchOpen = !isSearchOpen;
+      }
+      
+      if (isSearchOpen) {
+        searchOverlay.classList.add('open');
+        // Auto-focus the input
+        setTimeout(() => {
+          if (searchInputOverlay) {
+            searchInputOverlay.focus();
+            // Place cursor at the end if there's text
+            const len = searchInputOverlay.value.length;
+            searchInputOverlay.setSelectionRange(len, len);
+          }
+        }, 350);
+      } else {
+        searchOverlay.classList.remove('open');
+        // Clear the input after close animation
+        setTimeout(() => {
+          if (searchInputOverlay) {
+            searchInputOverlay.value = '';
+          }
+        }, 400);
+      }
+    }
 
     // ===== INITIAL LOAD ANIMATIONS =====
     function triggerEntranceAnimations() {
@@ -940,7 +1295,6 @@
       const heroSearch = document.getElementById('heroSearch');
       const heroFade = document.getElementById('heroFade');
 
-      // Add animation classes with staggered timing
       if (heroArtwork) {
         heroArtwork.classList.add('animate-hero-artwork');
       }
@@ -960,7 +1314,6 @@
         heroFade.classList.add('animate-hero-fade');
       }
 
-      // Remove animation classes after they complete to prevent re-triggering
       setTimeout(() => {
         if (heroArtwork) heroArtwork.classList.remove('animate-hero-artwork');
         if (heroTitle) heroTitle.classList.remove('animate-hero-brand');
@@ -971,17 +1324,15 @@
       }, 2000);
     }
 
-    // Check if this is the initial page load (not SPA navigation)
     let isInitialLoad = true;
 
-    // Trigger animations on initial load
     if (document.readyState === 'complete') {
       triggerEntranceAnimations();
     } else {
       window.addEventListener('load', triggerEntranceAnimations);
     }
 
-    // ===== UPDATED SKELETON - Using Bootstrap grid =====
+    // ===== SKELETON =====
     function skeletonGrid(count = 12) {
       let html = '<div class="skeleton-grid"><div class="row g-2">';
       for (let i = 0; i < count; i++) {
@@ -990,8 +1341,11 @@
             <div class="skeleton-card">
               <div class="skeleton-img"></div>
               <div class="skeleton-body">
-                <div class="skeleton-text tall"></div>
-                <div class="skeleton-text short"></div>
+                <div class="skeleton-text title-line"></div>
+                <div class="skeleton-meta">
+                  <div class="skeleton-badge"></div>
+                  <div class="skeleton-badge year"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -1019,6 +1373,8 @@
     }
 
     async function loadRemoteSection(url, sectionKey, pushState = true) {
+      if (isSearchOpen) toggleSearch(false);
+      
       const isWatch = url.includes('/kaa-watch/') || url.includes('/watch/');
       content.style.opacity = '0';
       content.innerHTML = isWatch ? watchSkeleton() : skeletonGrid(12);
@@ -1027,8 +1383,6 @@
       try {
         const fetchUrl = new URL(url, window.location.origin);
         fetchUrl.searchParams.set('section', '1');
-
-        console.log(fetchUrl.toString());
 
         const resp = await fetch(fetchUrl.toString(), {
             headers: {
@@ -1039,10 +1393,6 @@
         if (!resp.ok) throw new Error('Network error');
         const html = await resp.text();
 
-console.log("FETCH URL:", fetchUrl);
-console.log("STATUS:", resp.status);
-console.log("HTML LENGTH:", html.length);
-console.log(html.substring(0, 300));
         content.style.opacity = '0';
         setTimeout(() => {
           content.innerHTML = html;
@@ -1072,6 +1422,8 @@ console.log(html.substring(0, 300));
     }
 
     function restoreHome(pushState = true) {
+      if (isSearchOpen) toggleSearch(false);
+      
       content.style.opacity = '0';
       setTimeout(() => {
         content.innerHTML = originalHomeHTML;
@@ -1082,9 +1434,13 @@ console.log(html.substring(0, 300));
           try { window.history.pushState({ section: 'home' }, '', '/'); } catch(e) {}
         }
         if (window.innerWidth <= 991.98) sidebar.classList.remove('open');
-        // Re-trigger hero animations ONLY if coming back to home
         if (isInitialLoad) {
           triggerEntranceAnimations();
+        }
+        if (isHeroCollapsed) {
+          heroSection.classList.remove('collapsed');
+          compactHeader.classList.remove('visible');
+          isHeroCollapsed = false;
         }
       }, 80);
     }
@@ -1148,7 +1504,7 @@ console.log(html.substring(0, 300));
       });
     });
 
-    // Search forms
+    // Search forms - handle submission
     function handleSearch(e, form) {
       e.preventDefault();
       const query = form.querySelector('input[name="q"]').value.trim();
@@ -1156,9 +1512,13 @@ console.log(html.substring(0, 300));
       const url = '/search?q=' + encodeURIComponent(query);
       loadRemoteSection(url, 'search');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (isSearchOpen) toggleSearch(false);
     }
+
+    // Handle search submission from all forms
     if (searchForm) searchForm.addEventListener('submit', function(e) { handleSearch(e, this); });
     if (searchFormHeader) searchFormHeader.addEventListener('submit', function(e) { handleSearch(e, this); });
+    if (searchFormOverlay) searchFormOverlay.addEventListener('submit', function(e) { handleSearch(e, this); });
 
     // Watch clicks (delegated)
     document.addEventListener('click', function(e) {
@@ -1170,18 +1530,81 @@ console.log(html.substring(0, 300));
       }
     });
 
-    // Mobile toggle
+    // ===== MOBILE TOGGLES =====
     if (mobileToggle && sidebar) {
       mobileToggle.addEventListener('click', function(e) { 
         e.stopPropagation(); 
         sidebar.classList.toggle('open'); 
       });
-      document.addEventListener('click', function(e) {
-        if (window.innerWidth <= 991.98 && !sidebar.contains(e.target) && e.target !== mobileToggle) {
-          sidebar.classList.remove('open');
-        }
+    }
+    
+    if (mobileToggleCompact && sidebar) {
+      mobileToggleCompact.addEventListener('click', function(e) { 
+        e.stopPropagation(); 
+        sidebar.classList.toggle('open'); 
       });
     }
+    
+    document.addEventListener('click', function(e) {
+      if (window.innerWidth <= 991.98 && 
+          !sidebar.contains(e.target) && 
+          e.target !== mobileToggle && 
+          e.target !== mobileToggleCompact &&
+          !mobileToggle?.contains(e.target) &&
+          !mobileToggleCompact?.contains(e.target)) {
+        sidebar.classList.remove('open');
+      }
+    });
+
+    // ===== COMPACT HEADER SEARCH =====
+    if (searchToggleCompact) {
+      searchToggleCompact.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleSearch();
+      });
+    }
+    
+    if (searchClose) {
+      searchClose.addEventListener('click', function() {
+        toggleSearch(false);
+      });
+    }
+    
+    // Close search on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && isSearchOpen) {
+        toggleSearch(false);
+      }
+    });
+    
+    // Close search on outside click
+    document.addEventListener('click', function(e) {
+      if (isSearchOpen && 
+          !searchOverlay.contains(e.target) && 
+          e.target !== searchToggleCompact &&
+          !searchToggleCompact?.contains(e.target)) {
+        toggleSearch(false);
+      }
+    });
+
+    // ===== SCROLL HANDLER =====
+    window.addEventListener('scroll', throttledScroll, { passive: true });
+    
+    setTimeout(() => {
+      handleHeroScroll();
+    }, 100);
+
+    // ===== RESIZE HANDLER =====
+    let resizeTimeout = null;
+    window.addEventListener('resize', function() {
+      if (resizeTimeout) {
+        window.cancelAnimationFrame(resizeTimeout);
+      }
+      resizeTimeout = window.requestAnimationFrame(() => {
+        handleHeroScroll();
+        resizeTimeout = null;
+      });
+    });
 
     // Init
     setActiveSidebar('home');
@@ -1198,7 +1621,7 @@ console.log(html.substring(0, 300));
       }
     });
 
-    console.log('✨ BoldNiwally · Hero first-view optimized with entrance animations.');
+    console.log('✨ BoldNiwally · Instant search with auto-focus, no extra button.');
   })();
 </script>
 </body>
