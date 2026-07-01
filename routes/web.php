@@ -1199,7 +1199,9 @@ logger()->info(
             },
             $body
         );
-
+logger()->info('GENERATED_PLAYLIST', [
+    'body' => substr($body, 0, 1000),
+]);
         return response(
             $body,
             200,
