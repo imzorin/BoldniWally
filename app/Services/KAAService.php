@@ -527,31 +527,33 @@ return $this->safeGet(
 
 public function recent(int $page = 1): array
 {
-    return Cache::remember(
-        "kaa_recent_page_{$page}",
-        300,
-        function () use ($page) {
+    $cacheKey = "kaa_recent_page_{$page}";
 
-            return $this->safeGet(
-                "https://kaa.lt/api/show/recent?type=all&page={$page}"
-            );
-
-        }
+    $data = $this->safeGet(
+        "https://kaa.lt/api/show/recent?type=all&page={$page}"
     );
+
+    if (!empty($data)) {
+        Cache::put($cacheKey, $data, 300);
+        return $data;
+    }
+
+    return Cache::get($cacheKey, []);
 }
 public function schedule(): array
 {
-    return Cache::remember(
-        'kaa_schedule',
-        600, // 10 minutes
-        function () {
+    $cacheKey = 'kaa_schedule';
 
-            return $this->safeGet(
-                'https://kaa.lt/api/schedule'
-            );
-
-        }
+    $data = $this->safeGet(
+        'https://kaa.lt/api/schedule'
     );
+
+    if (!empty($data)) {
+        Cache::put($cacheKey, $data, 600);
+        return $data;
+    }
+
+    return Cache::get($cacheKey, []);
 }
 public function homepage()
 {
